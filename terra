@@ -1,0 +1,35 @@
+pipeline {
+  agent any
+
+  environment {
+    AWS_ACCESS_KEY_ID = 'AKIA3BA4ESYLZRYAUS56'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_DEFAULT_REGION = 'ap-east-1'
+  }
+
+  stages {
+    stage('git') {
+        steps {
+            sh 'git init'
+            sh "git pull https://github.com/kushi/terr.git"
+        }
+    }
+    stage('Terraform Init') {
+      steps {
+        sh 'terraform init'
+      }
+    }
+
+    stage('Terraform Plan') {
+      steps {
+        sh 'terraform plan -out=tfplan'
+      }
+    }
+
+    stage('Terraform Apply') {
+      steps {
+        sh 'terraform apply tfplan'
+      }
+    }
+  }
+}
